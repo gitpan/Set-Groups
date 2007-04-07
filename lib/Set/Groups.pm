@@ -25,11 +25,10 @@ require Exporter ;
 
 use 5.006;
 use Carp;
-#use Data::Dumper ;
 use warnings;
 use strict;
 
-our $VERSION = 0.1 ;
+our $VERSION = 0.2 ;
 
 sub new
 {
@@ -176,7 +175,7 @@ sub getSinglesOf
   return keys %h ;
 }
 
-sub removeSingleFrom
+sub removeOwnSingleFrom
 {
   my ($this,$single,$group) = @_ ;
   if ($this->isSingleOf($single,$group))
@@ -261,7 +260,7 @@ NewGroup returns 0 if this group already exists, 1 otherwise.
 
 =head3 deleteGroup
 
-Delete a group from the set. Return 1 on success, 0 oterhwise.
+Delete a group from the set. Return 1 on success, 0 otherwise.
 
   $groups->deleteGroup("a_group") ;
   
@@ -311,7 +310,7 @@ If the member group doesn't exist in the set, it is created as an empty group.
   
 =head3 isOwnSingleOf
 
-Check if a single is a own member of a group.
+Check if a single is an own member of a group.
 
   $present = $groups->isOwnSingleOf("single","a_group") ;
 
@@ -345,9 +344,9 @@ Return the list of (own or not) singles of a group.
 
   @singles = $groups->getSinglesOf("a_group") ;
 
-=head3 removeSingleFrom
+=head3 removeOwnSingleFrom
 
-Remove a single from a group. Return 1 on success, 0 otherwise.
+Remove an own single from a group. Return 1 on success, 0 otherwise.
 
   $groups->removeSingleFrom("single","a_group") ;
 
@@ -362,19 +361,18 @@ Remove a group member from a group. Return 1 on success, 0 otherwise.
 Suppose a group file like :
 
 	admin:root,adm
-	system:@admin,operator
 	team:piotr,lioudmila,adam,annette,jacquelin
 	true-users:james,sophie,@team,mohammed
-	everybody:@system,@true-users
+	everybody:@admin,operator,@true-users
 	daemon:apache,smmsp,named,daemon
 	virtual:nobody,halt,@daemon
 	all:@everybody,@virtual
 
-where C<@name> means I<group named name>, then the following code :
+where C<@name> means I<group name>, then the following code :
 
 	use Set::Groups ;
 
-	my $groups = new Set::Groups ;
+	$groups = new Set::Groups ;
 	while(<F>)
 	{
 	  ($group,$members) = /^(\S+):(.*)$/ ;
@@ -406,7 +404,7 @@ Jacquelin Charbonnel, C<< <jacquelin.charbonnel at math.cnrs.fr> >>
 
 Please report any bugs or feature requests to
 C<bug-dir-which at rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Dir-Which>.
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Set-Groups>.
 I will be notified, and then you'll automatically be notified of progress on
 your bug as I make changes.
 
@@ -414,7 +412,7 @@ your bug as I make changes.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc Dir::Which
+    perldoc Set-Groups
 
 You can also look for information at:
 
@@ -422,26 +420,21 @@ You can also look for information at:
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
-L<http://annocpan.org/dist/Dir-Which>
+L<http://annocpan.org/dist/Set-Groups>
 
 =item * CPAN Ratings
 
-L<http://cpanratings.perl.org/d/Dir-Which>
+L<http://cpanratings.perl.org/d/Set-Groups>
 
 =item * RT: CPAN's request tracker
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Dir-Which>
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Set-Groups>
 
 =item * Search CPAN
 
-L<http://search.cpan.org/dist/Dir-Which>
+L<http://search.cpan.org/dist/Set-Groups>
 
 =back
-
-=head1 ACKNOWLEDGEMENTS
-
-C<Dir::Which> is inspired by C<File::SearchPath> written by Tim Jenness.  
-Thanks to Tim for allowing me to reuse his idea.
 
 =head1 COPYRIGHT & LICENSE
 

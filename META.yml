@@ -1,6 +1,6 @@
 ---
 name: Set-Groups
-version: 0.1
+version: 0.2
 author:
   - 'Jacquelin Charbonnel <jacquelin.charbonnel at math.cnrs.fr>'
 abstract: A set of groups.
@@ -14,6 +14,6 @@ meta-spec:
 provides:
   Set::Groups:
     file: lib/Set/Groups.pm
-    version: 0.1
+    version: 0.2
 resources:
   license: http://dev.perl.org/licenses/
