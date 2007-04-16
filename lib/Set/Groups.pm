@@ -4,15 +4,15 @@ package Set::Groups ;
 # 
 #           Jacquelin Charbonnel - CNRS/LAREMA
 #  
-#   $Id: Groups.pm 145 2007-04-07 09:12:34Z jaclin $
+#   $Id: Groups.pm 155 2007-04-16 20:49:31Z jaclin $
 #   
 #   ----
 #  
 # 
 # 
 #   ----
-#   $LastChangedDate: 2007-04-07 11:12:34 +0200 (Sat, 07 Apr 2007) $ 
-#   $LastChangedRevision: 145 $
+#   $LastChangedDate: 2007-04-16 22:49:31 +0200 (Mon, 16 Apr 2007) $ 
+#   $LastChangedRevision: 155 $
 #   $LastChangedBy: jaclin $
 #   $URL: https://svn.math.cnrs.fr/jaclin/src/pm/Set-Groups/Groups.pm $
 #  
@@ -28,7 +28,7 @@ use Carp;
 use warnings;
 use strict;
 
-our $VERSION = 0.2 ;
+our $VERSION = 0.3 ;
 
 sub new
 {
@@ -196,6 +196,11 @@ sub removeGroupFrom
   }
   else { return 0 ; }
 }
+
+1; 
+
+
+
 
 =head1 NAME
 
@@ -395,7 +400,6 @@ where C<@name> means I<group name>, then the following code :
 gives : apache, sophie, jacquelin, lioudmila, mohammed, smmsp, nobody, adm, annette, operator, james, named, adam, halt, root, daemon, piotr
 
 =cut
-
 =head1 AUTHOR
 
 Jacquelin Charbonnel, C<< <jacquelin.charbonnel at math.cnrs.fr> >>
@@ -403,7 +407,7 @@ Jacquelin Charbonnel, C<< <jacquelin.charbonnel at math.cnrs.fr> >>
 =head1 BUGS
 
 Please report any bugs or feature requests to
-C<bug-dir-which at rt.cpan.org>, or through the web interface at
+C<bug-Set-Groups at rt.cpan.org>, or through the web interface at
 L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Set-Groups>.
 I will be notified, and then you'll automatically be notified of progress on
 your bug as I make changes.
@@ -424,7 +428,7 @@ L<http://annocpan.org/dist/Set-Groups>
 
 =item * CPAN Ratings
 
-L<http://cpanratings.perl.org/d/Set-Groups>
+L<http://cpanratings.perl.org/Set-Groups>
 
 =item * RT: CPAN's request tracker
 
@@ -438,7 +442,7 @@ L<http://search.cpan.org/dist/Set-Groups>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright Jacquelin Charbonnel E<lt>jacquelin.charbonnel at math.cnrs.frE<gt>
+Copyright Jacquelin Charbonnel E<lt> jacquelin.charbonnel at math.cnrs.fr E<gt>
 
 This software is governed by the CeCILL-C license under French law and
 abiding by the rules of distribution of free software.  You can  use, 
@@ -466,6 +470,3 @@ same conditions as regards security.
 The fact that you are presently reading this means that you have had
 knowledge of the CeCILL-C license and that you accept its terms.
 
-=cut
-
-1; 
