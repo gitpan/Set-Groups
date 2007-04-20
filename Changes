@@ -4,5 +4,6 @@ Revision history for Dir-Which
        First version, released on an unsuspecting world.
 0.2    2007-04-08
        Documentation correction
-0.3    2007-04-16
-       Documentation correction
+0.4    2007-04-20
+       Add the detection of the cyclic groups
+       New methods are setDebug, getCyclicGroups, getAcyclicGroups and isAcyclic.
