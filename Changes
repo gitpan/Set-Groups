@@ -14,3 +14,5 @@ Revision history for Set::Groups
            addSingleTo is renamed addOwnSingleTo (addSingleTo still exists, but is deprecated)
            addGroupTo is renamed addOwnGroupTo (addGroupTo still exists, but is deprecated) 
            removeGroupFrom is renamed removeOwnGroupFrom (removeGroupFrom still exists, but is deprecated) 
+0.6    2007-04-22
+       SVN tags update

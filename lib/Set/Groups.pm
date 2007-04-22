@@ -4,7 +4,7 @@ package Set::Groups ;
 # 
 #           Jacquelin Charbonnel - CNRS/LAREMA
 #  
-#   $Id: Groups.pm 162 2007-04-20 20:56:21Z jaclin $
+#   $Id: Groups.pm 163 2007-04-22 08:52:41Z jaclin $
 #   
 #   ----
 #  
@@ -13,8 +13,8 @@ package Set::Groups ;
 #   A group can be flattened, i.e. expansed until each of his members is a single one.
 # 
 #   ----
-#   $LastChangedDate: 2007-04-20 22:56:21 +0200 (Fri, 20 Apr 2007) $ 
-#   $LastChangedRevision: 162 $
+#   $LastChangedDate: 2007-04-22 10:52:41 +0200 (Sun, 22 Apr 2007) $ 
+#   $LastChangedRevision: 163 $
 #   $LastChangedBy: jaclin $
 #   $URL: https://svn.math.cnrs.fr/jaclin/src/pm/Set-Groups/Groups.pm $
 #  
@@ -30,7 +30,7 @@ use Carp;
 use warnings;
 use strict;
 
-our $VERSION = 0.5 ;
+our $VERSION = 0.6 ; # $LastChangedRevision: 163 $
 my $hfmt = "Set::Groups: HORROR: group '%s' is cyclic, the walk is infinite... Bye"  ;
 
 sub new()
