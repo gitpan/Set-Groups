@@ -8,7 +8,9 @@ package Set::Groups ;
 #   
 #   ----
 #  
-# 
+#   A set of groups.
+#   Each group can own single members and group members.
+#   A group can be flattened, i.e. expansed until each of his members is a single one.
 # 
 #   ----
 #   $LastChangedDate: 2007-04-20 22:56:21 +0200 (Fri, 20 Apr 2007) $ 
@@ -28,7 +30,7 @@ use Carp;
 use warnings;
 use strict;
 
-our $VERSION = 0.4 ;
+our $VERSION = 0.5 ;
 my $hfmt = "Set::Groups: HORROR: group '%s' is cyclic, the walk is infinite... Bye"  ;
 
 sub new()
@@ -121,6 +123,14 @@ sub addSingleTo($$)
 {
 	my ($this,$single,$group) = @_ ;
 
+	warn "Set::Groups: NOTICE: 'addSingleTo' is deprecated, use 'addOwnSingleTo' instead" if $this->{"debug"}>0 ;
+	return $this->addOwnSingleTo($single,$group) ;
+}
+
+sub addOwnSingleTo($$)
+{
+	my ($this,$single,$group) = @_ ;
+
 	return 0 if exists $this->{"group"}{$group}{"single"}{$single} ;
 	$this->{"group"}{$group}{"single"}{$single} = 1 ;
 	return 1 ;
@@ -130,11 +140,27 @@ sub addGroupTo($$)
 {
 	my ($this,$mgroup,$group) = @_ ;
 
+	warn "Set::Groups: NOTICE: 'addGroupTo' is deprecated, use 'addOwnGroupTo' instead" if $this->{"debug"}>0 ;
+	return $this->addOwnGroupTo($mgroup,$group) ;
+}
+
+sub addOwnGroupTo($$)
+{
+	my ($this,$mgroup,$group) = @_ ;
+
 	return 0 if exists $this->{"group"}{$group}{"group"}{$mgroup} ;
 	$this->{"group"}{$mgroup} = {} unless (exists $this->{"group"}{$mgroup}) ;
 	$this->{"group"}{$group}{"group"}{$mgroup} = 2 ;
 	delete $this->{"partition"} if exists $this->{"partition"} ;
 	return 1 ;
+}
+
+sub removeSingleFrom($$)
+{
+	my ($this,$single,$group) = @_ ;
+
+	warn "Set::Groups: NOTICE: 'removeSingleFrom' is deprecated, use 'removeOwnSingleFrom' instead" if $this->{"debug"}>0 ;
+	return $this->removeOwnSingleFrom($single,$group) ;
 }
 
 sub removeOwnSingleFrom($$)
@@ -150,6 +176,14 @@ sub removeOwnSingleFrom($$)
 }
 
 sub removeGroupFrom($$)
+{
+	my ($this,$sub,$group) = @_ ;
+
+	warn "Set::Groups: NOTICE: 'removeGroupFrom' is deprecated, use 'removeOwnGroupFrom' instead" if $this->{"debug"}>0 ;
+	return $this->removeOwnGroupFrom($sub,$group) ;
+}
+
+sub removeOwnGroupFrom($$)
 {
 	my ($this,$sub,$group) = @_ ;
 
@@ -178,7 +212,7 @@ sub isOwnSingleOf($$)
 	return exists $this->{"group"}{$group}{"single"}{$candidate} ;
 }
 
-sub isGroupOf($$)
+sub isOwnGroupOf($$)
 {
 	my ($this,$candidate,$group) = @_ ;
 	return exists $this->{"group"}{$group}{"group"}{$candidate} ;
@@ -193,13 +227,22 @@ sub isSingleOf($$)
 	return exists $fs{$candidate} ;
 }  
 
+sub isGroupOf($$)
+{
+	my ($this,$candidate,$group) = @_ ;
+
+	carp sprintf($hfmt,$group) if $this->{"debug"}>0 && !$this->isAcyclic($group) ;
+	my %fs = $this->_flattenedGroupsOf($group) ;
+	return exists $fs{$candidate} ;
+}  
+
 sub getOwnSinglesOf($)
 {
 	my ($this,$group) = @_ ;
 	return keys %{$this->{"group"}{$group}{"single"}} ;
 }
 
-sub getGroupsOf($)
+sub getOwnGroupsOf($)
 {
 	my ($this,$group) = @_ ;
 	return keys %{$this->{"group"}{$group}{"group"}} ;
@@ -211,6 +254,15 @@ sub getSinglesOf($)
 
 	carp sprintf($hfmt,$group) if $this->{"debug"}>0 && !$this->isAcyclic($group) ;
 	my %h = $this->_flattenedSinglesOf($group) ;
+	return keys %h ;
+}
+
+sub getGroupsOf($)
+{
+	my ($this,$group) = @_ ;
+
+	carp sprintf($hfmt,$group) if $this->{"debug"}>0 && !$this->isAcyclic($group) ;
+	my %h = $this->_flattenedGroupsOf($group) ;
 	return keys %h ;
 }
 
@@ -232,6 +284,29 @@ sub _flattenedSinglesOf()
 		for my $kk (keys %fs)
 		{
 			$flat{$kk} = 1 ;
+		}
+	}
+	return %flat ;
+}  
+
+sub _flattenedGroupsOf()
+{
+	my ($this,$group) = @_ ;
+
+	my %flat = () ;
+	for my $k (keys %{$this->{"group"}{$group}{"group"}})
+	{
+		$flat{$k} = 1 ;
+		if (! exists $this->{"group"}{$k}{"group"} || scalar keys %{$this->{"group"}{$k}{"group"}}==0)
+		{ 
+		}
+		else
+		{
+			my %fs = $this->_flattenedGroupsOf($k) ;
+			for my $kk (keys %fs)
+			{
+				$flat{$kk} = 1 ;
+			}
 		}
 	}
 	return %flat ;
@@ -303,25 +378,25 @@ Set::Groups - A set of groups.
   $groups = new Set::Groups ;
   
   # create a group MyGroup with a single member
-  $groups->addSingleTo("single1","MyGroup") ;
+  $groups->addOwnSingleTo("single1","MyGroup") ;
 
-  # add 2 singles members into MyGroup
-  $groups->addSinglesTo(["single2","single3"],"MyGroup") ;
-  
   # add a group member into MyGroup
-  $groups->addGroupTo("Member1Group","MyGroup") ; 
+  $groups->addOwnGroupTo("Member1Group","MyGroup") ; 
 
-  # add 2 group members into MyGroup
-  $groups->addGroupsTo(["Member2Group","Member3Group"],"MyGroup") ; 
+  # add a single members into the previous member group
+  $groups->addOwnSingleTo("single2","Member1Group") ;
+  
+  # add a group member into the previous member group
+  $groups->addOwnGroupTo("Member2Group","Member1Group") ; 
 
-  # add a single members into the previous member groups
-  $groups->addSingleTo("single4","Member1Group") ;
-  $groups->addSingleTo("single5","Member2Group") ;
-  $groups->addSingleTo("single6","Member3Group") ;
+  # add a single members into the previous member group
+  $groups->addOwnSingleTo("single3","Member2Group") ;
   
   # flatten the group MyGroup
-  @singles = $groups->getSinglesOf("MyGroup") ;  
-  $present = $groups->isSingleOf("single4","MyGroup") ; 
+  @singles = $groups->getSinglesOf("MyGroup") ; 
+  @groups = $groups->getGroupsOf("MyGroup") ; 
+  $present = $groups->isSingleOf("single3","MyGroup") ; 
+  $present = $groups->isGroupOf("Member2Group","MyGroup") ; 
   
 =head1 DESCRIPTION
 
@@ -343,7 +418,7 @@ Create a new group set.
 
 =head3 setDebug
 
-Set a debug level.
+Set a debug level (0 or 1).
 
   $groups->setDebug(1) ;
   
@@ -390,35 +465,35 @@ Check if a group is present into the set.
 
 =head2 Groups management
 
-=head3 addSingleTo
+=head3 addOwnSingleTo
 
 Add a single member to a group. 
 A single is everything which can be a key of a hash.
 If the group doesn't exist in the set, it is created.
 Return 1 on success, 0 otherwise.
 
-  $groups->addSingleTo("single","a_group") ;
+  $groups->addOwnSingleTo("single","a_group") ;
 
-=head3 addGroupTo
+=head3 addOwnGroupTo
 
 Add a group member to a group. 
 If the embedding group doesn't exist in the set, it is created.
 If the member group doesn't exist in the set, it is created as an empty group.
 Return 1 on success, 0 otherwise.
 
-  $groups->addGroupTo("group_member","a_group") ;
+  $groups->addOwnGroupTo("group_member","a_group") ;
   
 =head3 removeOwnSingleFrom
 
 Remove an own single from a group. Return 1 on success, 0 otherwise.
 
-  $groups->removeSingleFrom("single","a_group") ;
+  $groups->removeOwnSingleFrom("single","a_group") ;
 
-=head3 removeGroupFrom
+=head3 removeOwnGroupFrom
 
 Remove a group member from a group. Return 1 on success, 0 otherwise.
 
-  $groups->removeGroupFrom("a_member_group","a_group") ;
+  $groups->removeOwnGroupFrom("a_member_group","a_group") ;
 
 =head3 isAcyclic
 
@@ -432,11 +507,11 @@ Check if a single is an own member of a group.
 
   $present = $groups->isOwnSingleOf("single","a_group") ;
 
-=head3 isGroupOf
+=head3 isOwnGroupOf
 
-Check if a group is member of a group.
+Check if a group is an own member of a group.
 
-  $present = $groups->isGroupOf("a_group_member","a_group") ;
+  $present = $groups->isOwnGroupOf("a_group_member","a_group") ;
 
 =head3 isSingleOf
 
@@ -444,7 +519,15 @@ Check if a single is a (own or not) member of a group.
 
   $present = $groups->isSingleOf("single","an_acyclic_group") ;
 
-Warning - Calling this method wich a cyclic group as argument gives a infinite recursion.
+Warning - Calling this method with a cyclic group as argument gives a infinite recursion.
+
+=head3 isGroupOf
+
+Check if a group is a (own or not) member of a group.
+
+  $present = $groups->isGroupOf("a_group_member","an_acyclic_group") ;
+
+Warning - Calling this method with a cyclic group as argument gives a infinite recursion.
 
 =head3 getOwnSinglesOf
 
@@ -452,11 +535,11 @@ Return the list of own singles of a group.
 
   @singles = $groups->getOwnSinglesOf("a_group") ;
 
-=head3 getGroupsOf
+=head3 getOwnGroupsOf
 
-Return the list of groups of a group.
+Return the list of own groups of a group.
 
-  @groups = $groups->getGroupsOf("a_group") ;
+  @groups = $groups->getOwnGroupsOf("a_group") ;
 
 =head3 getSinglesOf
 
@@ -464,7 +547,31 @@ Return the list of (own or not) singles of an acyclic group.
 
   @singles = $groups->getSinglesOf("an_acyclic_group") ;
 
-Warning - Calling this method wich a cyclic group as argument gives a infinite recursion.
+Warning - Calling this method with a cyclic group as argument gives a infinite recursion.
+
+=head3 getGroupsOf
+
+Return the list of (own or not) groups of an acyclic group.
+
+  @groups = $groups->getGroupsOf("an_acyclic_group") ;
+
+Warning - Calling this method with a cyclic group as argument gives a infinite recursion.
+
+=head3 addGroupTo
+
+Deprecated - Replaced by addOwnGroupTo.
+
+=head3 addSingleTo
+
+Deprecated - Replaced by addOwnSingleTo.
+
+=head3 removeGroupFrom
+
+Deprecated - Replaced by removeOwnGroupFrom.
+
+=head3 removeSingleFrom
+
+Deprecated - Replaced by removeOwnSingleFrom.
 
 =head1 EXAMPLES
 
@@ -483,7 +590,7 @@ where C<@name> means I<group name>, then the following code :
 	use Set::Groups ;
 
 	$groups = new Set::Groups ;
-	while(<F>)
+	while(<>)
 	{
 	  ($group,$members) = /^(\S+):(.*)$/ ;
 	  @members = split(/,/,$members) ;
@@ -492,17 +599,21 @@ where C<@name> means I<group name>, then the following code :
 	    if ($member=~/^@/)
 	    {
 	      $member=~s/^@// ;
-	      $groups->addGroupTo($member,$group) ;
+	      $groups->addOwnGroupTo($member,$group) ;
 	    }
 	    else
 	    {
-	      $groups->addSingleTo($member,$group) ;
+	      $groups->addOwnSingleTo($member,$group) ;
 	    }
 	  }
 	}
 	die "some groups are cyclic" if scalar($groups->getCyclicGroups())>0 ;
-	print join(', ',$groups->getSinglesOf("all")) ;
+	print "singles: ",join(', ',$groups->getSinglesOf("all")),"\n" ;
+	print "groups: ",join(', ',$groups->getGroupsOf("all")),"\n" ;
 
-gives : apache, sophie, jacquelin, lioudmila, mohammed, smmsp, nobody, adm, annette, operator, james, named, adam, halt, root, daemon, piotr
+gives : 
+
+	singles: apache, sophie, jacquelin, lioudmila, mohammed, smmsp, nobody, adm, annette, operator, james, named, adam, halt, root, daemon, piotr
+	groups: admin, everybody, team, daemon, true-users, virtual
 
 =cut
