@@ -4,7 +4,7 @@ package Set::Groups ;
 # 
 #           Jacquelin Charbonnel - CNRS/LAREMA
 #  
-#   $Id: Groups.pm 163 2007-04-22 08:52:41Z jaclin $
+#   $Id: Groups.pm 20 2007-11-06 19:35:28Z jaclin $
 #   
 #   ----
 #  
@@ -13,10 +13,10 @@ package Set::Groups ;
 #   A group can be flattened, i.e. expansed until each of his members is a single one.
 # 
 #   ----
-#   $LastChangedDate: 2007-04-22 10:52:41 +0200 (Sun, 22 Apr 2007) $ 
-#   $LastChangedRevision: 163 $
+#   $LastChangedDate: 2007-11-06 20:35:28 +0100 (Tue, 06 Nov 2007) $ 
+#   $LastChangedRevision: 20 $
 #   $LastChangedBy: jaclin $
-#   $URL: https://svn.math.cnrs.fr/jaclin/src/pm/Set-Groups/Groups.pm $
+#   $URL: https://svn.math/system-tools/trunk/Set-Groups/Groups.pm $
 #  
 #   ======================
 
@@ -30,11 +30,11 @@ use Carp;
 use warnings;
 use strict;
 
-our $VERSION = 0.6 ; # $LastChangedRevision: 163 $
+our $VERSION = 0.7 ; # $LastChangedRevision: 20 $
 my $hfmt = "Set::Groups: HORROR: group '%s' is cyclic, the walk is infinite... Bye"  ;
 
 sub new()
-{
+{ 
 	my ($type) = @_ ;
 	my $this = {
 		"group" => {}
@@ -617,3 +617,73 @@ gives :
 	groups: admin, everybody, team, daemon, true-users, virtual
 
 =cut
+=head1 AUTHOR
+
+Jacquelin Charbonnel, C<< <jacquelin.charbonnel at math.cnrs.fr> >>
+
+=head1 BUGS
+
+Please report any bugs or feature requests to
+C<bug-Set-Groups at rt.cpan.org>, or through the web interface at
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Set-Groups>.
+I will be notified, and then you'll automatically be notified of progress on
+your bug as I make changes.
+
+=head1 SUPPORT
+
+You can find documentation for this module with the perldoc command.
+
+    perldoc Set-Groups
+
+You can also look for information at:
+
+=over 4
+
+=item * AnnoCPAN: Annotated CPAN documentation
+
+L<http://annocpan.org/dist/Set-Groups>
+
+=item * CPAN Ratings
+
+L<http://cpanratings.perl.org/s/Set-Groups>
+
+=item * RT: CPAN's request tracker
+
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Set-Groups>
+
+=item * Search CPAN
+
+L<http://search.cpan.org/dist/Set-Groups>
+
+=back
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright Jacquelin Charbonnel E<lt> jacquelin.charbonnel at math.cnrs.fr E<gt>
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
